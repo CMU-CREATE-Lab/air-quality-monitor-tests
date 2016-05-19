@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+   <title>Air Quality Monitor Test Results</title>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+   <style type="text/css">
+      body {
+         position: relative;
+      }
+
+      #navigation {
+         top: 20px;
+         position: fixed;
+      }
+
+      @media screen and (max-width: 767px) {
+         #navigation {
+            display: none;
+         }
+      }
+
+      .nav > li > a {
+         padding: 5px 10px 5px 0;
+      }
+
+      .nav-pills > li > a {
+         border-radius: 0;
+      }
+
+      .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+         color: #000;
+         background-color: #ffffff;
+         font-weight: bold;
+         border-right: 2px solid black;
+      }
+
+      .nav > li > a:focus, .nav > li > a:hover {
+         background-color: #ffffff;
+         border-right: 1px solid #cccccc;
+      }
+
+      .plot {
+         text-align: center;
+      }
+
+      .plot img {
+         margin-bottom: 20px;
+      }
+
+      @media screen and (max-width: 767px) {
+         .data_download {
+            font-size: smaller;
+         }
+      }
+   </style>
+
+   <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+   <script src="lib/ekko-lightbox/ekko-lightbox.min.js" type="text/javascript"></script>
+   <script type="text/javascript">
+      var FEED_ID_TO_CHANNELS = {
+         // Dylos DC1100 Pro
+         6716 : "count_small,count_large",
+
+         // Speck
+         6717 : "particle_concentration,particle_count,raw_particles,temperature",
+
+         // Awair
+         6718 : "pm",
+
+         // Grimm EDM 180
+         6719 : "count_0_25,count_0_28,count_0_30,count_0_35,count_0_40,count_0_45,count_0_50,count_0_58,count_0_65,count_0_70,count_0_80,count_1_00,count_1_30,count_1_60,count_2_00,count_2_50,count_3_0,count_3_5,count_4_0,count_5_0,count_6_5,count_7_5,count_8_5,count_10_0,count_12_5,count_15_0,count_17_5,count_20_0,count_25_0,count_30_0,count_32_0,pm_1_0,pm_2_5,pm_10_0",
+
+         // Air Quality Egg PM
+         6720 : "pm",
+
+         // Foobot
+         6721 : "pm_2_5",
+
+         // Blueair Aware
+         6722 : "pm_2_5"
+      };
+
+      $(document).ready(function() {
+         $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+         });
+      });
+
+      function downloadData(feedId, isJsonFormat) {
+         var url = "http://esdr.cmucreatelab.org/api/v1/feeds/" + feedId + "/channels/" + FEED_ID_TO_CHANNELS[feedId] + "/export";
+         if (isJsonFormat) {
+            url += '?format=json';
+         }
+         console.log(url);
+         window.location.href = url;
+
+         return false;
+      }
+
+   </script>
+</head>
+<body data-spy="scroll" data-target="#navigation_container" data-offset="20">
+<div class="container">
+   <div class="row">
+      <nav class="col-sm-3" id="navigation_container">
+         <ul id="navigation" class="nav nav-pills nav-stacked">
+            <li class="active"><a href="#introduction">Introduction</a></li>
+            <li><a href="#aqeqq">Air Quality Egg PM</a></li>
+            <li><a href="#awair">Awair</a></li>
+            <li><a href="#blueair">BlueAir Aware</a></li>
+            <li><a href="#dylos">Dylos DC1100 Pro</a></li>
+            <li><a href="#foobot">Foobot</a></li>
+            <li><a href="#speck">Speck</a></li>
+            <li><a href="#evaluation_issues">Evaluation Issues</a></li>
+            <li><a href="#data">Data</a></li>
+         </ul>
+      </nav>
+      <div class="col-sm-9">
+         <div id="introduction">
+            <h1>Air Quality Monitor Test Results</h1>
+            <h2>Introduction</h2>
+            <p>
+               <img src="images/testSetup.jpg" class="img-responsive">
+            </p>
+            <p style="font-size: larger">
+               One year ago at SxSW we promised to collect air quality sensors and test them, openly publishing all
+               data. Now we've purchased every low-cost sensor we can get our hands on, and we've done all the
+               engineering necessary to get values recorded and timestamped &mdash; not easy in some cases. Here are all the
+               sensors in our calibration space, where they ran for two days straight while we generated multiple
+               daytime particulate peaks. Below are notes on each sensor, including three types of graphs: two-day
+               views show all the data for 80 hours; one-day views showing 11 hours; and one-peak views showing one 1.5
+               hour peak. We compare values to the Grimm EDM 180, our EPA-approved class III instrument.
+            </p>
+         </div>
+         <div id="aqeqq">
+            <h2>Air Quality Egg PM</h2>
+            <p>
+               The Air Quality Egg PM samples rapidly, every five seconds, but exhibits the noisiest signal out of all the
+               devices we tested. You can just make out the daytime peaks, but notice that peaks exist all night long
+               also, when the Grimm reports consistently clean air.
+            </p>
+            <div class="row">
+               <div class="col-sm-6 plot">
+                  <a href="images/aqegg1.png" data-toggle="lightbox" data-title="Air Quality Egg"><img src="images/aqegg1.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/aqegg2.png" data-toggle="lightbox" data-title="Air Quality Egg"><img src="images/aqegg2.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/aqegg3.png" data-toggle="lightbox" data-title="Air Quality Egg"><img src="images/aqegg3.png" class="img-responsive"></a>
+               </div>
+            </div>
+         </div>
+         <div id="awair">
+            <h2>Awair</h2>
+            <p>
+               Awair picks up dirty air peaks very well, and demonstrates low values when the Grimm reports clean air,
+               such as overnight. Some individual spikes are disproportionately high, and the 1.5 hour view shows that
+               Awair detects single peaks, but not with the same shape as the Grimm.
+            </p>
+            <div class="row">
+               <div class="col-sm-6 plot">
+                  <a href="images/awair1.png" data-toggle="lightbox" data-title="Awair"><img src="images/awair1.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/awair2.png" data-toggle="lightbox" data-title="Awair"><img src="images/awair2.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/awair3.png" data-toggle="lightbox" data-title="Awair"><img src="images/awair3.png" class="img-responsive"></a>
+               </div>
+            </div>
+         </div>
+         <div id="blueair">
+            <h2>BlueAir Aware</h2>
+            <p>
+               Theoretically, BlueAir Aware is Foobot inside, but we see very different behavior; the Aware reads zero
+               (perfectly clean air) outside of the large spikes. This is incorrect given the Grimm's readings, even
+               overnight, and so we are surprised. Maybe we have a faulty Aware unit? A second issue, looking at the
+               single-peak view, is that Aware notices the bad air about 30 minutes after Grimm; that is a large
+               delay.
+            </p>
+            <div class="row">
+               <div class="col-sm-6 plot">
+                  <a href="images/blueair1.png" data-toggle="lightbox" data-title="BlueAir Aware"><img src="images/blueair1.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/blueair2.png" data-toggle="lightbox" data-title="BlueAir Aware"><img src="images/blueair2.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/blueair3.png" data-toggle="lightbox" data-title="BlueAir Aware"><img src="images/blueair3.png" class="img-responsive"></a>
+               </div>
+            </div>
+         </div>
+         <div id="dylos">
+            <h2>Dylos DC1100 Pro</h2>
+            <p>
+               The Dylos DC1100 Pro does an excellent job of matching the Grimm at all three zoom levels. It is unique
+               among these sensors in reporting particle counts rather than just mass, so we compare it against the
+               Grimm count of all particles of size 2.5 microns and below. In general, the Dylos appears to be a good
+               proxy for more expensive particle count monitors.
+            </p>
+            <div class="row">
+               <div class="col-sm-6 plot">
+                  <a href="images/dylos1.png" data-toggle="lightbox" data-title="Dylos DC1100 Pro"><img src="images/dylos1.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/dylos2.png" data-toggle="lightbox" data-title="Dylos DC1100 Pro"><img src="images/dylos2.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/dylos3.png" data-toggle="lightbox" data-title="Dylos DC1100 Pro"><img src="images/dylos3.png" class="img-responsive"></a>
+               </div>
+            </div>
+         </div>
+         <div id="foobot">
+            <h2>Foobot</h2>
+            <p>
+               The Foobot samples infrequently, once every five minutes. Because Foobot's algorithm changes over time
+               (marketed as on-line learning), notice how the baseline shifts over time, between days. Its relative
+               values certainly see the peaks, but the baseline is not consistently matching the Grimm because of the
+               learning algorithm's dynamics.
+            </p>
+            <div class="row">
+               <div class="col-sm-6 plot">
+                  <a href="images/foobot1.png" data-toggle="lightbox" data-title="Foobot"><img src="images/foobot1.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/foobot2.png" data-toggle="lightbox" data-title="Foobot"><img src="images/foobot2.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/foobot3.png" data-toggle="lightbox" data-title="Foobot"><img src="images/foobot3.png" class="img-responsive"></a>
+               </div>
+            </div>
+         </div>
+         <div id="speck">
+            <h2>Speck</h2>
+            <p>
+               The Speck correlates well with the Grimm across all three zoom levels. Speck notices the single-peak
+               event exactly when the Grimm measures the spike, at hour 36.8. NOTE: we are the CREATE lab, inventors the
+               Speck. We created the spinoff that now sells Speck globally, so we are biased!
+            </p>
+            <div class="row">
+               <div class="col-sm-6 plot">
+                  <a href="images/speck1.png" data-toggle="lightbox" data-title="Speck"><img src="images/speck1.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/speck2.png" data-toggle="lightbox" data-title="Speck"><img src="images/speck2.png" class="img-responsive"></a>
+               </div>
+               <div class="col-sm-6 plot">
+                  <a href="images/speck3.png" data-toggle="lightbox" data-title="Speck"><img src="images/speck3.png" class="img-responsive"></a>
+               </div>
+            </div>
+         </div>
+         <div id="evaluation_issues">
+            <h2>Issues in Evaluating Low-Cost Air Quality Monitors</h2>
+            <p>
+               <b>Absolute error</b> &mdash; Does the monitor approximately match local agency-operated air quality monitors? Are
+               the values reported in units that can be compared against professional monitors, and are those values
+               within the proper order of magnitude to what these monitors are reporting? Accuracy is important for
+               being able to compare these monitors' readings with regional readings. Likewise, accuracy provides
+               context for the risk posed by the measured particles.
+            </p>
+            <p>
+               <b>Correlation</b> &mdash; Does the monitor's behavior match the shape of reference instruments such as the Grimm EDM
+               180 used in this experiment? Often, the shape of particle events can provide insight into the source of
+               the measured particles. If the particle levels rise very sharply, the source may be in the immediate
+               vicinity. Very gradual changes may be regional or may be a result of diffusion from outside the home.
+               Likewise, the rate of decrease can indicate the effectiveness of air purifiers or ventilation solutions.
+            </p>
+            <p>
+               <b>Response time and stability</b> &mdash; Does the monitor respond quickly to changes in air quality events? This is
+               tied closely to sample rate, or how often the device collects a measurement. A longer sample rate may
+               allow for more stability in the measurement, as the sample will typically collect data over the entire
+               interval between the present and prior reading, but more acute changes in particle concentration may not
+               be recorded as unique events. Sample rates that are too fast can result in noisy behavior because the
+               monitors cannot ingest as many particles per sample.
+            </p>
+            <p>
+               <b>Baseline behavior</b> &mdash; Does the behavior of the monitor reflect changes in baseline (clean) air quality?
+               Most monitors are able to identify acutely elevated particle concentrations, but for the purpose of
+               understanding long-term air quality trends, the monitor must also exhibit precision during periods of low
+               concentration.
+            </p>
+         </div>
+         <div id="data">
+            <h2>Data</h2>
+            <p style="margin-bottom:20px">
+               Use the buttons below to download the data in either CSV or JSON format.
+            </p>
+            <table class="table table-hover">
+               <thead>
+                  <tr>
+                     <th>Device</th>
+                     <th>CSV</th>
+                     <th>JSON</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>Grimm EDM 180</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6719)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6719, true)" role="button">JSON</a></td>
+                  </tr>
+                  <tr>
+                     <td>Air Quality Egg PM</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6720)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6720 ,true)" role="button">JSON</a></td>
+                  </tr>
+                  <tr>
+                     <td>Awair</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6718)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6718,true)" role="button">JSON</a></td>
+                  </tr>
+                  <tr>
+                     <td>BlueAir Aware</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6722)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6722,true)" role="button">JSON</a></td>
+                  </tr>
+                  <tr>
+                     <td>Dylos DC1100 Pro</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6716)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6716,true)" role="button">JSON</a></td>
+                  </tr>
+                  <tr>
+                     <td>Foobot</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6721)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6721,true)" role="button">JSON</a></td>
+                  </tr>
+                  <tr>
+                     <td>Speck</td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6717)" role="button">CSV</a></td>
+                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6717,true)" role="button">JSON</a></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+</body>
+</html>
