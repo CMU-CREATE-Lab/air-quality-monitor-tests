@@ -57,9 +57,63 @@
          }
       }
    </style>
+   <style type="text/css">
+      .video_thumbnail_with_caption {
+         position: relative;
+         margin: 15px 0;
+      }
+
+      .video_thumbnail_with_caption .video_thumbnail {
+         position: relative;
+      }
+
+      .video_thumbnail_with_caption .video_thumbnail .video_thumbnail_image {
+         margin-right: auto;
+         margin-left: auto;
+      }
+
+      .video_thumbnail_with_caption .video_thumbnail .play_button {
+         position: absolute;
+         font-size: 60px;
+         line-height: 60px;
+         color: rgba(80, 80, 80, 0.8);
+         left: 0;
+         right: 0;
+         margin-right: auto;
+         margin-left: auto;
+         text-align: center;
+         pointer-events: none;
+         top: 50%;
+         -webkit-transform: translateY(-50%);
+         -ms-transform: translateY(-50%);
+         transform: translateY(-50%);
+      }
+
+      .video_thumbnail_with_caption .caption {
+         margin-top: 3px;
+         color: #666666;
+         text-align: center;
+      }
+
+      @media (max-width: 629px) {
+         .video_thumbnail_with_caption .caption {
+            font-size: smaller;
+         }
+      }
+
+      .video_thumbnail_with_caption .caption a {
+         text-decoration: none;
+         color: #666666;
+      }
+
+      .video_thumbnail_with_caption:hover .play_button {
+         color: #00adef;
+      }
+   </style>
 
    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+   <script src="https://use.fontawesome.com/ace0c39d99.js" type="text/javascript"></script>
    <script src="lib/ekko-lightbox/ekko-lightbox.min.js" type="text/javascript"></script>
    <script type="text/javascript">
       var FEED_ID_TO_CHANNELS = {
@@ -128,15 +182,33 @@
             <p>
                <img src="images/testSetup.jpg" class="img-responsive">
             </p>
-            <p style="font-size: larger">
-               One year ago at SxSW we promised to collect air quality sensors and test them, openly publishing all
-               data. Now we've purchased every low-cost sensor we can get our hands on, and we've done all the
-               engineering necessary to get values recorded and timestamped &mdash; not easy in some cases. Here are all the
-               sensors in our calibration space, where they ran for two days straight while we generated multiple
-               daytime particulate peaks. Below are notes on each sensor, including three types of graphs: two-day
-               views show all the data for 80 hours; one-day views showing 11 hours; and one-peak views showing one 1.5
-               hour peak. We compare values to the Grimm EDM 180, our EPA-approved class III instrument.
-            </p>
+            <div class="row">
+               <div class="col-sm-7">
+
+                  <p style="font-size: larger">
+                     One year ago at SxSW we promised to collect air quality sensors and test them, openly publishing all
+                     data. Now we've purchased every low-cost sensor we can get our hands on, and we've done all the
+                     engineering necessary to get values recorded and timestamped &mdash; not easy in some cases. Here are all the
+                     sensors in our calibration space, where they ran for two days straight while we generated multiple
+                     daytime particulate peaks. Below are notes on each sensor, including three types of graphs: two-day
+                     views show all the data for 80 hours; one-day views showing 11 hours; and one-peak views showing one 1.5
+                     hour peak. We compare values to the Grimm EDM 180, our EPA-approved class III instrument.
+                  </p>
+               </div>
+               <div class="col-sm-5">
+                  <div class="video_thumbnail_with_caption">
+                     <div class="video_thumbnail">
+                        <a href="//player.vimeo.com/video/167447733" data-toggle="lightbox" data-title="Discussion of Test Results"><img src="//i.vimeocdn.com/video/571757816_640.jpg" class="video_thumbnail_image img-responsive"></a>
+                        <div class="play_button">
+                           <i class="fa fa-youtube-play"></i>
+                        </div>
+                     </div>
+                     <div class="caption">
+                        <a href="//player.vimeo.com/video/167447733" data-toggle="lightbox" data-title="Discussion of Test Results">Discussion of Test Results</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
          </div>
          <div id="aqeqq">
             <h2>Air Quality Egg PM</h2>
