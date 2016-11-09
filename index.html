@@ -133,10 +133,7 @@
          6720 : "pm",
 
          // Foobot
-         6721 : "pm_2_5",
-
-         // Blueair Aware
-         6722 : "pm_2_5"
+         6721 : "pm_2_5"
       };
 
       $(document).ready(function() {
@@ -167,7 +164,6 @@
             <li class="active"><a href="#introduction">Introduction</a></li>
             <li><a href="#aqeqq">Air Quality Egg PM</a></li>
             <li><a href="#awair">Awair</a></li>
-            <li><a href="#blueair">BlueAir Aware</a></li>
             <li><a href="#dylos">Dylos DC1100 Pro</a></li>
             <li><a href="#foobot">Foobot</a></li>
             <li><a href="#speck">Speck</a></li>
@@ -245,32 +241,6 @@
                </div>
                <div class="col-sm-6 plot">
                   <a href="images/awair3.png" data-toggle="lightbox" data-title="Awair"><img src="images/awair3.png" class="img-responsive"></a>
-               </div>
-            </div>
-         </div>
-         <div id="blueair">
-            <h2>BlueAir Aware</h2>
-            <p>
-               Theoretically, BlueAir Aware is Foobot inside, but we see very different behavior; the Aware reads zero
-               (perfectly clean air) outside of the large spikes. This is incorrect given the Grimm's readings, even
-               overnight, and so we are surprised. Maybe we have a faulty Aware unit? A second issue, looking at the
-               single-peak view, is that Aware notices the bad air about 30 minutes after Grimm; that is a large
-               delay.
-            </p>
-            <p>
-               Update (2016-06-02): We have learned from BlueAir engineers that their sensor takes a minimum of 48 hours of exposure to a
-               normal indoor environment prior to establishing a baseline, and this may explain the less responsive
-               behavior we see in this test.
-            </p>
-            <div class="row">
-               <div class="col-sm-6 plot">
-                  <a href="images/blueair1.png" data-toggle="lightbox" data-title="BlueAir Aware"><img src="images/blueair1.png" class="img-responsive"></a>
-               </div>
-               <div class="col-sm-6 plot">
-                  <a href="images/blueair2.png" data-toggle="lightbox" data-title="BlueAir Aware"><img src="images/blueair2.png" class="img-responsive"></a>
-               </div>
-               <div class="col-sm-6 plot">
-                  <a href="images/blueair3.png" data-toggle="lightbox" data-title="BlueAir Aware"><img src="images/blueair3.png" class="img-responsive"></a>
                </div>
             </div>
          </div>
@@ -392,11 +362,6 @@
                      <td>Awair</td>
                      <td><a class="btn btn-xs btn-default" onclick="return downloadData(6718)" role="button">CSV</a></td>
                      <td><a class="btn btn-xs btn-default" onclick="return downloadData(6718,true)" role="button">JSON</a></td>
-                  </tr>
-                  <tr>
-                     <td>BlueAir Aware</td>
-                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6722)" role="button">CSV</a></td>
-                     <td><a class="btn btn-xs btn-default" onclick="return downloadData(6722,true)" role="button">JSON</a></td>
                   </tr>
                   <tr>
                      <td>Dylos DC1100 Pro</td>
